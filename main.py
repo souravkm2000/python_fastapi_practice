@@ -1,431 +1,335 @@
-from fastapi import FastAPI
 
+"""from typing import Union
+from fastapi import FastAPI
+from pydantic import BaseModel,EmailStr
+
+app=FastAPI()
+
+class UserIn(BaseModel):
+    username:str
+    password:str
+    email:EmailStr
+    full_name:Union[str,None]=None
+    
+    
+class userout(BaseModel):
+    username:str
+    email:EmailStr
+    full_name:Union[str,None]=None
+    
+class UserInDB(BaseModel):
+    username:str
+    hashed_password:str
+    email:EmailStr
+    full_name:Union[str,None]=None
+    
+    
+def fake_password_hasher(raw_password:str):
+    return "supersecret" +raw_password
+
+
+def fake_save_user(user_in:UserIn):
+    hashed_password=fake_password_hasher(user_in.password)
+    user_in_db=UserInDB(**user_in.dict(),hashed_password=hashed_password)
+    print("user saved!..not really")
+    return user_in_db     """
+    
+    
+    
+    
+    
+ #       ****reduce duplication***
+        
+
+
+"""from  typing import Union
+from fastapi import FastAPI
+from  pydantic import BaseModel,EmailStr
+
+app=FastAPI
+
+
+class UserBase(BaseModel):
+    username:str
+    email:EmailStr
+    full_name:Union[str,None]=None
+    
+    
+class UserIn(UserBase):
+
+    password:str
+    
+    
+class Userout(UserBase):
+    pass        
+     
+
+class UserInDB(UserBase):
+    hashed_password:str
+    
+    
+    
+def fake_password_hasher(raw_password:str):
+    return"supersecret"+raw_password
+    
+
+def fake_save_user(user_in:UserIn):
+    hashed_password+fake_password_hasher(user_in.password)
+    user_in_db=UserInDB(**user_in.dict(),hashed_password=hashed_password)
+    print("user saved!..not really")
+    return user_in_db   """                
+    
+    
+    
+    
+    
+    
+    #  ....union or anyOf....
+    
+"""from typing import Union
+from  fastapi import FastAPI
+from pydantic import BaseModel
+
+app= FastAPI()
+
+
+class BaseItem(BaseModel):
+    description:str
+    type:str
+    
+class carItem(BaseModel):
+    type="car"
+    
+    
+class PlaneItem(BaseModel):
+    type="plane"
+    size:int        
+         
+
+items ={
+    "item1":{"description":"All my friends drive a low rider","type": "car"},
+     "item2":{
+         "description":"music is my aeroplane,it's my aeroplane",
+         "type":"plane",
+         "size":5,
+     },        
+             
+}         
+         
+@app.get("/items/{item_id}",response_model=Union[PlaneItem,carItem])
+async def read_item(item_id:str):
+  return items[item-id]     """
+  
+  
+  
+  #...list of models....
+  
+
+
+"""from fastapi import FastAPI
+from pydantic import BaseModel
+app = FastAPI()
+
+
+class Item (BaseModel):
+    name:str
+    description:str
+    
+    
+    
+items = [
+    
+    {"name":"foo","description":"there comes my hero"},
+    {"name":"Red","description":"it's my aeroplane"},
+    
+]      
+  
+@app.get("/items/",response_model=list[Item])
+async def read_items():
+    return items  """
+    
+    
+    #....response statas code...
+    
+    
+    
 """from fastapi import FastAPI
 
 app = FastAPI()
-@app.get("/item/{item_id}")
-async def read_item(item_id:int):
-    return {"item_id":item_id}"""
+
+@app.post("/items/",status_code=201)
+async def create_item(name:str):
+    return {"name":name}"""
     
-from enum import Enum
-from fastapi import FastAPI
-
-class class_name(str,Enum):
-    alexnet ="alexnet"
-    resnet = "resnet"
-    lenet = "lenet"
     
-app=FastAPI()
-
-
-"""@app.get ("/model/{model_name}")
-async def model_name(model_name: ModelNam    e):
-    if model_name is ModelName.alexnet:
-        return {"model_name":model_name , "message":"helloworld"}
-
     
-    if model_name.value == "lenet":
-        return{"model_name":model_name, "message":"how are you"}
-        return {"model_name":model_name,"mesage":"how are you"}   """
-        
-        
-        
-"""from typing import Union  
-from fastapi import FastAPI
-from pydantic import Basemodel
+    #...short to remember the names
+    
+"""from fastapi import FastAPI
+app = FastAPI()
 
-class item (Basemodel):
-    ame: str
-    description: Union[str, None] = None
-    price: float
-    tax: Union[float, None] = None
+@app.post ("/items/",status_code=201)
+async def  create_item(name:str):
+    return{"name":name}"""
+    
+#.... import form....
+
+"""from fastapi import FastAPI,Form
 
 app = FastAPI()
 
-
-@app.post("/items/")
-async def create_item(item: Item):
-    return item    """
+@app.post("/login/")
+async def login(username:str = Form(), password:str =Form()):
+    return {"username:username"}"""
     
+    #....Request files
     
-    
+#....import file.....
 
 
-"""from fastapi import FastAPI, Path
+
+"""from fastapi import FastAPI,File,UploadFile
 
 app = FastAPI()
 
+@app.post("/files/")
+async def create_file(file:bytes = File()):
+    return{"file_size":len(file)}
 
-@app.get("/items/{item_id}")
-async def read_items(*, item_id: int = Path(title="The ID of the item to get"), q: str):
-    results = {"item_id": item_id}
-    if q:
-        results.update({"q": q})
-    return results
+@app.post("/uploadfile/")
+async def create_upload_file(file:UploadFile):
+    return{"filename":file.filename}"""
     
     
+    #...define File parameters...
     
     
-    from fastapi import FastAPI, Path
-    app=FastAPI()
-    @app.get ("/item/{item_id}")
-    async def read_items(
-        *,item_id:int=Path(little="The ID of the item to get",ge=1),q=str
-        
-    ):
-        return {"item_id":iteem_id}
-    if q:
-        return.update({"q":q})
-    return results
-    
-    
-    
-    
-from typing import Union
+"""from fastapi import FastAPI,File,UploadFile
+app = FastAPI()
+@app.post ("/files/")
+async def create_file(file:bytes =File()):
+    return {"file_size":len(file)}
 
-from fastapi import Body, FastAPI
-from pydantic import BaseModel, Field
+@app.post("/uploadfile/")
+async def create_upload_file(file:UploadFile):
+    return{"filename":file.filename} """
+    
 
+
+#..file parameter with uploadfile..
+
+
+"""from fastapi import FastAPI,File,UploadFile
 app = FastAPI()
 
-
-class Item(BaseModel):
-    name: str
-    description: Union[str, None] = Field(
-        default=None, title="The description of the item", max_length=300
-    )
-    price: float = Field(gt=0, description="The price must be greater than zero")
-    tax: Union[float, None] = None
+@app.post("/files/")
+async def create_file(file:bytes = File()):
+    return {"file_size":len(file)}
 
 
-@app.put("/items/{item_id}")
-async def update_item(item_id: int, item: Item = Body(embed=True)):
-    results = {"item_id": item_id, "item": item}
-    return results
+@app.post("/uploadfile/")
+async def create_upload_file(file:UploadFile):
+    return{"filename":file.filename}    """   
     
-    
-    
-    
-    
-from typing import Union
-
-from fastapi import Body, FastAPI
-from pydantic import BaseModel, Field
-
-app = FastAPI()
-
-
-class Item(BaseModel):
-    name: str
-    description: Union[str, None] = Field(
-        default=None, title="The description of the item", max_length=300
-    )
-    price: float = Field(gt=0, description="The price must be greater than zero")
-    tax: Union[float, None] = None
-
-
-@app.put("/items/{item_id}")
-async def update_item(item_id: int, item: Item = Body(embed=True)):
-    results = {"item_id": item_id, "item": item}
-    return results
-    
-    
-
-
-
-from typing import Union
-from fastapi import FastAPI
-from pydantic import Basemodel
-
-class iteam (Basemodel):
-    name:str
-    discription:Union(str,None)=None
-    price:float
-    tax: Union(float,None)=None
-    tag:list= []
-    
-@app.put("/items/{item_id}")
-async def update_item(item_id:int,item:Item):
-    return {"item_id":item_id,"item":item}
-    return results
-    
-    
-    
-    
-from typing import Union
-from fastapi import FastAPI
-from pydantic import BaseModel
-app = FastAPI()
-class item (BaseModel):
-    name:str
-    description:Union[str,None]=None
-    price:float
-    tax:Union[float,None]=None
-    tags:list=[]
-    
-@app.put("/items/{item_id}")
-async def update_item(item_id:int,item:item):
-    results={"item_id":item_id,"item":item}
-    return results  """   
-     
-     
-     
-"""from typing import Union 
-
-
-from fastapi import FastAPI
-from pydantic import BaseModel,HttpUrl
-
-app = FastAPI()
-
-class Image (BaseModel):
-    url:HttpUrl
-    name:str
-    
-class Item (BaseModel):
-    name:str
-    description :Union[str,None]= None
-    price:float
-    tax:Union[float,None]= None
-    tag:set[str]=set()
-    image:Union[Image,None]=None      
-
-
    
-    
-@app.put("/items/{item_id}")
-async def update_item(item_id: int, item: Item):
-    results ={"item_id":item_id,"item":item}
-    return results"""
-    
-    
-    
-
-
-
-"""from fastapi import FastAPI 
-from pydantic import BaseMOdel
-
+   #...OPTIONAL file upload...
+   
+   
+   
+"""from typing import Union
+from fastapi import FastAPI,File,UploadFile
 
 app = FastAPI()
 
-
-class Item (BaseMOdel):
-    name:str
-    description: str|None=None
-    price:float
-    tax:float|None=None
+@app.post ("/files/")
+async def create_file(file:Union[bytes,None]=File(default=None)):
+    if not file:
+        return{"message":"NO file sent"}
+    else:
+        return{"file_size":len(file)}
     
-    class config:
-        schema_extra ={
-            "example":{
-                "name":"foo",
-                "description":"a very nice Item",
-                "price":35.4,
-                "tax":3.2
-            }
-        }
+@app.post("/uploadfile/")
+async def create_upload_file(file:Union[UploadFile,None]=None):
+    if not file:
+        return{"message":"no upload file sent"}
+    else:
+        return{"filename":file.filename}  """ 
+    
+
         
-@app.put ("/items/{iteam_id}")
-async def update_item(item_id:int,item:Item):
-    results_{"item_id":item_id,"item":item}
-    return results"""
+    
+#...uploadfile with additional metadata..
+
+"""from fastapi import FastAPI,File,UploadFile
+
+app =FastAPI()
+
+@app.post("/files/")
+async def create_file(file:bytes = file(description="a file read as bytes")):
+    return{"file_size":len (file)}
+
+@app.post ("/uploadfile/")
+async def create_upload_file(
+    file:UploadFile = File(description= "A file read as uploadfile"),
+    
+):
+    return {"filename":file.filename}"""
     
     
     
-    
-    
-    
-    
+    #....multiple file uploads...
 
 
 
-"""from fastapi import Body, FastAPI
-from pydantic import BaseModel
+"""from fastapi import FastAPI,File,UploadFile
+from fastapi.responses import HTMLResponse
+
+app = FastAPI()
+
+@app.post("/files/")
+async def create_files(files:list[bytes]= File()):
+    return{"file_sizes":[len(file)for file in files]}
+
+
+@app.post("/uploadfiles/")
+async def create_upload_files(files:list[UploadFile]):
+    return{"filenames":[file.filename for file in files]}
+
+@app.get("/")
+async def main():
+    return HTMLResponse(content=content) """
+    
+    
+   #...multiple file uploads with additional metadata... 
+   
+
+"""from fastapi import FastAPI,File,UploadFile
+from fastapi.responses import HTMLResponse
 
 app = FastAPI()
 
 
-class Item(BaseModel):
-    name: str
-    description: str | None = None
-    price: float
-    tax: float | None = None
-
-
-@app.put("/items/{item_id}")
-async def update_item(
-    *,
-    item_id: int,  
-    item: Item = Body(
-        examples={
-            "normal": {
-                "summary": "A normal example",
-                "description": "A **normal** item works correctly.",
-                "value": {
-                    "name": "Foo",
-                    "description": "A very nice Item",
-                    "price": 35.4,
-                    "tax": 3.2,
-                },
-            },
-            "converted": {
-                "summary": "An example with converted data",
-                "description": "FastAPI can convert price `strings` to actual `numbers` automatically",
-                "value": {
-                    "name": "Bar",
-                    "price": "35.4",
-                },
-            },
-            "invalid": {
-                "summary": "Invalid data is rejected with an error",
-                "value": {
-                    "name": "Baz",
-                    "price": "thirty five point four",
-                },
-            },
-        },
-    ),
+@app.post ("/files/")
+async def create_files(
+    files:list[bytes] =File(description="multiple files as bytes"),
+    
 ):
-    results = {"item_id": item_id, "item": item}
-    return results
-    
-from datetime import datetime,time,timedelta
-from uuid import UUID
+    return{"filenames":[file.filename for file in files]}
+content =""
 
 
-from fastapi  import BODY ,FastAPI
-app=FastAPI()
-@app.put ("/items/{item_id}")
-async def read_items(
-    item_id:UUID
-    start_datetime:datetime |None = BODY(default=None)
-    end_datetime:datetime |none=BODY(default=None),
-    repeat_at:time | None=BODY(default=None),
-    process_after:timedata | None=BODY(default=None)
-):
-    start_process= start_datetime +process_after
-    duration = end_datetime -start_process
-    return{
-        "item_id":item_id,
-        "start_datetime": start_datetime,
-        "end datetime": end_datetime,
-        "repeat_at":repeat_at,
-        "process_after":process_after,
-        "start_process":start_process,
-        "duration":duraction,
-    }                    
-
-       
-from typing import Union
-from pydantic import BaseModel
-from fastapi import FastAPI
-app=FastAPI()
-
-
-class Item (BaseModel):
-    name:str
-    discription :Union[str,None]=None
-    price:float
-    tax:Union[float,None]=None
-    tag:list[str]=[]
+@app.get("/")
+async def main():
+    return HTMLResponse(content=content)  """
     
     
-    
-    
-@app.put ("/items/{item_id}")
-async def update_item (item_id:int,item:Item):
-    results={"item_id":item_id,"item":item}
-    return results    
-
-    
-    
-    
-from typing import Union
-from fastapi import FastAPI
-from pydantic import BaseModel
-
-
-app= FastAPI()
-
-
-class Item (BaseModel):
-    name:str
-    description:Union[str,None]=None
-    price:float
-    tax:Union[float,None]=None
-    tag:set[str]=set()
-    
-    
-@app.put ("/items/{item_id}")
-async def update_item (item_id:int,item:Item):
-    results={"item_id":item_id,"item":item}
-    return results  
-    
-    
-    
-    
-from typing import Union
-from fastapi import FastAPI
-from pydantic import BaseModel,HttpUrl
-
-
-app= FastAPI()
-
-
-class Image(BaseModel):
-    url:HttpUrl
-    name:str
-    
-    
-class Item (BaseModel):
-    name:str
-    description: Union[str,None]=None
-    price:float
-    tax:Union[float,None]=None
-    tags:set[str]=set()
-    images:Union[list[Image],None]=None
-    
-    
-class offer(BaseModel):
-    name:str
-    descrition:Union[str,None]=None
-    price:float
-    items:list[Item]
-    
-    
-@app.post("/offers/")
-async def create_offer(offer:offer):
-    return offer   
-    
-    
-    
-from typing import Union
-from fastapi import FastAPI
-from pydantic import BaseModel,field
-app=FastAPI()
-
-class Item (BaseModel):
-    name:str=filed(example="foo")
-    description:Union[str,None]=filed(default=None,example="a very nice Item")
-    price:float=filed(example=35.4)
-    tax:Union[float,None]=filed(default=None,example=3.2)
-    
-    
-@app.put("/item/{item_id}")
-async def update_item (item_id:int,item:Item):
-    results={"item_id":item_id,"item":item}
-    return results     """
-    
-    
-from typing import Union
-
-from fastapi import  cookie,FastAPI
-
-app= FastAPI()
-
-@app.get ("/items/")
-async def read_items(ads_Id:Union[str,none]=cookie(default=None)):
-    return{"ads_Id":ads_Id}                    
-
-
+   
+      
+         
+         
+         
+         
+         
+         
+         
+         
